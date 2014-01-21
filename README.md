@@ -1,4 +1,4 @@
-cmp_ormlite_lazy
+hysteresis-adapter
 ==================
 
 Status: ok
