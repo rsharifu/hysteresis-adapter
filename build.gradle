@@ -1,0 +1,61 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.7.+'
+    }
+}
+
+apply plugin: 'android-library'
+apply plugin: 'maven-publish'
+apply plugin: 'checkstyle'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.j256.ormlite:ormlite-android:4.48'
+}
+
+group = 'org.surlac.ormlite.adapter'
+version = '0.0.8-SNAPSHOT'
+
+android {
+    compileSdkVersion 18
+    buildToolsVersion "19.0.1"
+
+    defaultConfig {
+        minSdkVersion 7
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+}
+
+checkstyle {
+    configFile project.file('checkstyle.xml')
+    showViolations true
+}
+
+// Custom Tasks
+
+/// JAR
+task jar(type: Jar) {
+    from 'build/classes/release'
+    exclude('**/BuildConfig.class')
+
+}
+
+/// Publish to local maven repo
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact jar {
+            }
+        }
+    }
+}
