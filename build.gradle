@@ -21,7 +21,7 @@ dependencies {
 }
 
 group = 'org.surlac.ormlite.adapter'
-version = '0.0.8-SNAPSHOT'
+version = '0.0.9-SNAPSHOT'
 
 android {
     compileSdkVersion 18

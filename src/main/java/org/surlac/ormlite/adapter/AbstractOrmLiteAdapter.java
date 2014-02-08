@@ -2,7 +2,6 @@ package org.surlac.ormlite.adapter;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -12,9 +11,9 @@ import android.widget.ArrayAdapter;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
+import org.surlac.ormlite.os.AsyncTaskExecutionHelper;
 
 import java.lang.ref.SoftReference;
-import java.lang.reflect.ParameterizedType;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Comparator;
@@ -94,7 +93,7 @@ abstract public class AbstractOrmLiteAdapter<T> extends ArrayAdapter<T> {
             }
         };
 
-        asyncTask.execute(position, onFetchCompletedCallback, fields);
+        AsyncTaskExecutionHelper.executeParallel(asyncTask, position, onFetchCompletedCallback, fields);
 
     }
 
@@ -127,6 +126,9 @@ abstract public class AbstractOrmLiteAdapter<T> extends ArrayAdapter<T> {
     public int getCount() {
         try {
             QueryBuilder<T, Integer> queryBuilder = applyWhereConditions(dao.queryBuilder());
+            if(queryBuilder == null) {
+                return 0;
+            }
             int count = (int)queryBuilder.countOf();
             if(mObjects == null) {
                 initArrayList(count);
